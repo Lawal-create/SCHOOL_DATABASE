@@ -8,14 +8,13 @@ const courseSchema=new Schema({
     },
 
     units:{
-        type:Number,
+        type:String,
         required:true
     },
 
     taughtBy:{
         type:Schema.Types.ObjectId,
         ref:"Teacher",
-        required:true
     },
 
     attendedBy:[{
