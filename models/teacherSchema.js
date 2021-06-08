@@ -3,56 +3,51 @@ const teacherSchema=mongoose.Schema({
 
     admin:Boolean,
 
-    teachNum:{
+    teacherNum:{
         type:Number,
         required:true
     },
 
-    teachFname:{
+    teacherFname:{
         type:String,
         required:true
     },
 
-    teachMname:{
+    teacherMname:{
         type:String,
         required:true
     },
-    teachLname:{
-        type:String,
-        required:true
-    },
-
-    teachAddressCity:{
+    teacherLname:{
         type:String,
         required:true
     },
 
-    teachAddressReg:{
+    teacherAddressReg:{
         type:String,
         required:true
     },
 
-    teachPhone:{
+    teacherPhone:{
         type:String,
         required:true
     },
 
-    teachGender:{
+    teacherGender:{
         type:String,
         required:true
     },
 
-    teachAge:{
+    teacherAge:{
         type:String,
         required:true
     },
 
-    teachEmailAddress:{
+    teacherEmailAddress:{
         type:String,
         required:true
     },
 
-    teachDuration:{
+    teacherDuration:{
         type:String
     },
 
@@ -62,4 +57,7 @@ const teacherSchema=mongoose.Schema({
     }
 
 })
-module.exports=mongoose.model("Teacher",teacherSchema)
+
+const Teacher=mongoose.model("Teacher",teacherSchema)
+
+module.exports=Teacher

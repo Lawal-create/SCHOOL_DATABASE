@@ -24,4 +24,6 @@ const courseSchema=new Schema({
     }]
 })
 
-module.exports=mongoose.model("course",courseSchema)
+const course=mongoose.model("course",courseSchema)
+
+module.exports=course
