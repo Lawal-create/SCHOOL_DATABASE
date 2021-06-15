@@ -110,16 +110,6 @@ studentSchema.pre("save",async function(next){
     }
 })
 
-// studentSchema.pre('find',function(next){
-//     this.populate('courses')
-//     next()
-// })
-
-// studentSchema.pre('findOne',function(next){
-//     this.populate('courses')
-//     next()
-// })
-
 studentSchema.methods.correctPassword= async function(candidatePassword,userPassword){
     return await bcrypt.compare(candidatePassword,userPassword)
 }

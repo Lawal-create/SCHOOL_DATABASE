@@ -92,15 +92,6 @@ teacherSchema.pre("save",async function(next){
     }
 })
 
-teacherSchema.pre(/^find/,function(next){
-    this.populate({
-        path:'courses',
-        select:'-__v -passwordChangedAt'
-    })
-
-    next()
-})
-
 teacherSchema.methods.correctPassword= async function(
     candidatePassword,
     userPassword){

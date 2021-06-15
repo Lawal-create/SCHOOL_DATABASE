@@ -23,18 +23,6 @@ const courseSchema=new Schema({
     }]
 })
 
-// courseSchema.pre(/^find/,function(next){
-//     this.populate({
-//         path:'taughtBy',
-//         select:'-__v '
-//     }).populate(
-//         {
-//             path:'attendedBy',
-//         }
-//     )
-//     next()
-// }
-// )
 
 const course=mongoose.model("course",courseSchema)
 
