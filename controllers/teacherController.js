@@ -3,9 +3,13 @@ express()
 const teacher=require("../models/teacherSchema")
 const catchAsync=require("../utils/catchAsync")
 const APIFeatures=require("../utils/apiFeatures")
+const AppError = require("../utils/appError")
 
 //FInds a teacher based on ID
 exports.findTeacher= catchAsync(async(req,res,next)=>{
+    if(!req.params.id){
+        next(new AppError("Id provided isn't present "))
+    }
 
     const Teacher=await teacher.findById(req.params.id).populate("courses")
     res.status(200).json({
