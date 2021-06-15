@@ -1,25 +1,39 @@
 const express=require("express")
 const route=express.Router()
 
-const controllers=require("../controllers/userController")
+const userControllers=require("../controllers/userController")
+const authControllers=require("../controllers/authController") 
+// const teacherController=require("../controllers/teacherController")
+// const courseController=require("../controllers/courseController")
+
+//student signup and login route
+route
+.post("/signup",authControllers.studentSignup)
+.post("/login",authControllers.studentLogin)
 
 route
-.post("/api/courses", controllers.createCourses)
-.get("/api/courses", controllers.findCourses)
-.put("/api/courses/:id", controllers.updateCourses)
-.delete("/api/courses/:id", controllers.deleteCourses)
+.get("/:id", userControllers.findStudent)
+.get("/",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.getAllStudent)
+.patch("/:id", userControllers.updateStudent)
+.delete("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.deleteStudent)
 
-route
-.post("/api/student", controllers.createStudent)
-.get("/api/student", controllers.findStudent)
-.put("/api/student/:id", controllers.updateStudent)
-.delete("/api/student/:id", controllers.deleteStudent)
+//teacher signup and login route
+// route
+// .post("/api/teacher/signup",authControllers.teacherSignup)
+// .post("/api/teacher/login",authControllers.teacherLogin)
 
-route
-.post("/api/teacher", controllers.createTeacher)
-.get("/api/teacher", controllers.findTeacher)
-.put("/api/teacher/:id", controllers.updateTeacher)
-.delete("/api/teacher/:id", controllers.deleteTeacher)
+// route
+// .post("/api/courses", courseController.createCourses)
+// .get("/api/courses",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),courseController.getAllCourses)
+// .get("/api/course",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),courseController.findCourse)
+// .put("/api/courses/:id", courseController.updateCourses)
+// .delete("/api/courses/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),courseController.deleteCourses)
 
+
+
+// route
+// .get("/api/teacher",authControllers.restrictStudentTo('admin') ,teacherController.findTeacher)
+// .patch("/api/teacher/:id",authControllers.protectStudent,authControllers.restrictStudentTo('admin'),teacherController.updateTeacher)
+// .delete("/api/teacher/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),teacherController.deleteTeacher)
 
 module.exports=route
