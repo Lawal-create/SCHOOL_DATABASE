@@ -9,10 +9,10 @@ route
 .post("/login",authControllers.teacherLogin)
 
 route
-.get("/",authControllers.restrictStudentTo('admin') ,teacherController.getAllTeacher)
+.get("/",authControllers.protectStudent,authControllers.restrictStudentTo('admin') ,teacherController.getAllTeacher)
 
 route
-.get("/:id",authControllers.restrictStudentTo('admin') ,teacherController.findTeacher)
+.get("/:id",authControllers.protectStudent,authControllers.restrictStudentTo('admin') ,teacherController.findTeacher)
 .patch("/:id",authControllers.protectStudent,authControllers.restrictStudentTo('admin'),teacherController.updateTeacher)
 .delete("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),teacherController.deleteTeacher)
 
