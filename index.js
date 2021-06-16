@@ -30,7 +30,7 @@ app.all("*",(req,res,next)=>{
 app.use(globalErrorHandler)
 
 
-
+//Connects to the server
 app.listen(PORT,()=>{
     console.log(`Server is running at port ${PORT}`)
 })
