@@ -15,7 +15,7 @@ exports.studentSignup=catchAsync( async (req,res,next)=>{
         const token= tokenGen(student._id)
         res.status(200).json({
             status:"SUCCESS",
-            message:"Your information has been saved"
+            message:"Your account has been created successfully"
         })
 })
 
@@ -45,7 +45,7 @@ exports.teacherSignup=catchAsync(async(req,res,next)=>{
     const token= tokenGen(teacher._id)
     res.status(200).json({
         status:"SUCCESS",
-        message:"Your information has been saved"
+        message:"Your account has been created successfully"
     })
 })
 
