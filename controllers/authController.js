@@ -16,9 +16,7 @@ exports.studentSignup=catchAsync( async (req,res,next)=>{
         res.status(200).json({
             status:"SUCCESS",
             token,
-            data:{
-                student
-            }
+            message:"Your information has been saved"
         })
 })
 
@@ -49,9 +47,7 @@ exports.teacherSignup=catchAsync(async(req,res,next)=>{
     res.status(200).json({
         status:"SUCCESS",
         token,
-        data:{
-         teacher
-        }
+        message:"Your information has been saved"
     })
 })
 
