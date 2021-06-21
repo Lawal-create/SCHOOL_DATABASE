@@ -3,6 +3,7 @@ express()
 const course=require("../models/courses")
 const catchAsync=require("../utils/catchAsync")
 const APIFeatures=require("../utils/apiFeatures")
+const AppError = require("../utils/appError")
 
 //Creates a course
 exports.createCourses= catchAsync(async(req,res,next)=>{
@@ -36,6 +37,9 @@ exports.getAllCourses=catchAsync( async(req,res,next)=>{
 //Finds a course using an ID
 exports.findCourse=catchAsync( async(req,res,next)=>{
     const Course=await course.findById(req.params.id).populate('attendedBy').populate('taughtBy')
+    if(!Course){
+        return next(new AppError("No course with that ID present",404))
+    }
     res.status(200).json({
         status:"SUCCESS",
         Course
