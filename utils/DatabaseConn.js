@@ -1,6 +1,6 @@
 const mongoose=require("mongoose")
 
-const DB = process.env.DATABASE_LOCALHOST
+const DB = process.env.DATABASE
 
 // const DB = process.env.DATABASE
 
