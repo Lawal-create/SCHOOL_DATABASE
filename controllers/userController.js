@@ -3,6 +3,7 @@ express()
 const Student=require("../models/studentSchema")
 const catchAsync=require("../utils/catchAsync")
 const APIFeatures=require("../utils/apiFeatures")
+const AppError = require("../utils/appError")
 
 //Get students based on query
 exports.getAllStudent= catchAsync(async(req,res,next)=>{
@@ -23,6 +24,10 @@ exports.getAllStudent= catchAsync(async(req,res,next)=>{
 //Find a students based on ID
 exports.findStudent=catchAsync( async(req,res,next)=>{
     const student=await Student.findById(req.params.id)
+
+    if(!student){
+        return next(new AppError("No student with that ID",404))
+    }
     res.status(200).json({
         status:"SUCCESS",
         student

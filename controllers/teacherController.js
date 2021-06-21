@@ -7,11 +7,12 @@ const AppError = require("../utils/appError")
 
 //FInds a teacher based on ID
 exports.findTeacher= catchAsync(async(req,res,next)=>{
-    if(!req.params.id){
-        next(new AppError("Id provided isn't present "))
+    const Teacher=await teacher.findById(req.params.id).populate("courses")
+
+    if(!Teacher){
+        return next(new AppError("No Teacher with that ID present",404))
     }
 
-    const Teacher=await teacher.findById(req.params.id).populate("courses")
     res.status(200).json({
         status:"SUCCESS",
         Teacher
