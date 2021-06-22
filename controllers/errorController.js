@@ -1,7 +1,7 @@
 const AppError = require("../utils/appError");
 
 sendErrorDev=(err,res)=>{
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
         status:err.status,
         message:err.message
     })
@@ -40,7 +40,7 @@ module.exports=(err,req,res,next)=>{
 
     if(err.name==="ValidationError"){
         err=handleValidationErrorDB(err)
-    }
+    } 
 
 
     sendErrorDev(err,res)
