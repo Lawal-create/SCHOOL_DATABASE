@@ -9,6 +9,7 @@ const teacherRoute=require("./routes/teacherRoutes")
 const courseRoute=require("./routes/courseRoutes")
 const AppError=require("./utils/appError")
 const globalErrorHandler=require("./controllers/errorController")
+const homeRoute=require("./routes/homeRoutes")
 
 
 const db=require(`./utils/DatabaseConn.js`)
@@ -22,6 +23,7 @@ app.use(morgan("dev"))
 app.use("/api/courses", courseRoute)
 app.use("/api/student", userRoute)
 app.use("/api/teacher",teacherRoute)
+app.use("/",homeRoute)
 
 
 app.all("*",(req,res,next)=>{
@@ -34,4 +36,6 @@ app.use(globalErrorHandler)
 app.listen(PORT,()=>{
     console.log(`Server is running at port ${PORT}`)
 })
+
+module.exports=app
 
