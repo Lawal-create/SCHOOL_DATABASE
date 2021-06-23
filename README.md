@@ -2,7 +2,13 @@
 
     Built a school database handling issues such as Login, Courses, Teachers and Students. 
 
-# How to run this application on your system.
+
+## Requirements
+
+- Node.js **8+**
+- MongoDB **3.6+**
+
+## How to run this application on your system.
 
 - Clone the repo to your local system. Run this command in your command line(Command prompt or Microsoft Powershell or Git Bash)     
   <pre>
@@ -38,7 +44,7 @@
 </pre>
 
 
-# BASE_URL
+## BASE_URL
 
     https://lawal-school-database.herokuapp.com/
 
