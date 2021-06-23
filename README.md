@@ -40,16 +40,16 @@
 
 # BASE_URL
 
-https://lawal-school-database.herokuapp.com/
+    https://lawal-school-database.herokuapp.com/
 
 It performs the following functionalities:
 
-1.Registers a User as either a teacher(admin) or a student(user).
+- Registers a User as either a teacher(admin) or a student(user).
 
-2.Login a User with given credentials.
+- Login a User with given credentials.
 
-3.Performs CRUD operations for the data stored.
+- Performs CRUD operations for the data stored.
 
 ## API DOCUMENTATION 
 
-https://documenter.getpostman.com/view/15869686/TzeWGT9u
+    https://documenter.getpostman.com/view/15869686/TzeWGT9u
