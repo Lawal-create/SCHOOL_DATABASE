@@ -16,7 +16,7 @@ const teacherLoginDetails={
     "password":"Lawizylawino@123"
 }
 
-const updateStudentDatails={
+const updateStudentDetail={
     studPhone:"08076597632",
     studAge:21
 }
@@ -71,7 +71,6 @@ describe("*********USER*********",()=>{
                 res.should.have.status(200)
                 res.body.should.be.an('object')
                 createdID.push(res.body.data.students[0]._id)
-                console.log(createdID)
                 done()
           })
 
@@ -85,7 +84,6 @@ describe("*********USER*********",()=>{
                 .get(`/api/student/${id}`)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
-                    console.log(id)
                   res.should.have.status(200)
                   res.body.should.be.a('object')
                   done()
@@ -112,7 +110,7 @@ describe("*********USER*********",()=>{
             chai
                 .request(server)
                 .get(`/api/student/${id}`)
-                .send(updateStudentDatails)
+                .send(updateStudentDetail)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(200)
@@ -126,7 +124,7 @@ describe("*********USER*********",()=>{
             chai
                 .request(server)
                 .get(`/api/student/${id}`)
-                .send(updateStudentDatails)
+                .send(updateStudentDetail)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(404)
@@ -183,8 +181,5 @@ describe("*********USER*********",()=>{
 
         })
     })
-
-
-
     })
 })

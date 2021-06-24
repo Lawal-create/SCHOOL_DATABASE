@@ -13,7 +13,6 @@ exports.getAllStudent= catchAsync(async(req,res,next)=>{
     .limitFields()
     .paginate();
 
-    console.log(req.query)
     const students=await features.query
     res.status(200).json({
         numberOfStudents:students.length,

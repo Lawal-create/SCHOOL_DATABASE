@@ -197,28 +197,5 @@ describe("*********Authenticatiuon API***********",()=>{
               })
           })
       })
-
-
-
-
-
-
-
-          
-
-
-
-
-    /**
-     * Test the POST routes for Teacher sign up
-     */
-
-
-
-
-
-    /**
-     * Test the POST routes for teacher log in
-     */
 })
 
