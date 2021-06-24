@@ -6,7 +6,7 @@ var randomEmail = require('random-email');
 chai.should()
 
 chai.use(chaiHttp)
-let email=randomEmail({ domain: 'example.com' })
+let email=randomEmail({ domain: 'gmail.com' })
 
 
 const studentLoginDetails={

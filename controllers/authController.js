@@ -78,7 +78,7 @@ exports.protectStudent=catchAsync(async(req,res,next)=>{
     }
 
     if(!token){
-        return next(new AppError("No token found"))
+        return next(new AppError("No token found",401))
     }
     //verification of Token
     const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET)

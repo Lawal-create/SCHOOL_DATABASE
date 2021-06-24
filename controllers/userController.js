@@ -13,6 +13,7 @@ exports.getAllStudent= catchAsync(async(req,res,next)=>{
     .limitFields()
     .paginate();
 
+    console.log(req.query)
     const students=await features.query
     res.status(200).json({
         numberOfStudents:students.length,
@@ -48,7 +49,7 @@ exports.updateStudent=catchAsync(async(req,res,next)=>{
 
 //Delete a students based on ID
 exports.deleteStudent= catchAsync(async(req,res,next)=>{
-    await Student.findByIdAndDelete(req.params.id,req.body)
+    await Student.findByIdAndDelete(req.params.id)
 
     res.status(204).json({
         status:"SUCCESS",
