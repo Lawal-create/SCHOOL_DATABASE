@@ -12,7 +12,6 @@ const tokenGen=(id)=> {
 
 exports.studentSignup=catchAsync( async (req,res,next)=>{
         const student= await Student.create(req.body)
-        const token= tokenGen(student._id)
         res.status(200).json({
             status:"SUCCESS",
             message:"Your account has been created successfully"
@@ -42,7 +41,6 @@ exports.studentLogin=catchAsync(async(req,res,next)=>{
 
 exports.teacherSignup=catchAsync(async(req,res,next)=>{
     const teacher= await Teacher.create(req.body)
-    const token= tokenGen(teacher._id)
     res.status(200).json({
         status:"SUCCESS",
         message:"Your account has been created successfully"
@@ -78,11 +76,10 @@ exports.protectStudent=catchAsync(async(req,res,next)=>{
     }
 
     if(!token){
-        return next(new AppError("No token found"))
+        return next(new AppError("No token found",401))
     }
     //verification of Token
     const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET)
-    console.log(decoded)
 
     //Checking if the user still exists
     const currentTeacher=await Teacher.findById(decoded.id)

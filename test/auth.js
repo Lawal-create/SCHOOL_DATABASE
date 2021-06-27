@@ -6,7 +6,7 @@ var randomEmail = require('random-email');
 chai.should()
 
 chai.use(chaiHttp)
-let email=randomEmail({ domain: 'example.com' })
+let email=randomEmail({ domain: 'gmail.com' })
 
 
 const studentLoginDetails={
@@ -197,28 +197,5 @@ describe("*********Authenticatiuon API***********",()=>{
               })
           })
       })
-
-
-
-
-
-
-
-          
-
-
-
-
-    /**
-     * Test the POST routes for Teacher sign up
-     */
-
-
-
-
-
-    /**
-     * Test the POST routes for teacher log in
-     */
 })
 

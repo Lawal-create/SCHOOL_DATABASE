@@ -16,19 +16,19 @@ const teacherLoginDetails={
     "password":"Lawizylawino@123"
 }
 
-const updateStudentDetail={
-    studPhone:"08076597632",
-    studAge:21
+const updateTeacherDetails={
+    TeacherPhone:"08076597632",
+    TeacherAge:35
 }
 
-describe("*********USER*********",()=>{
+describe("*********admin*********",()=>{
     var token;
 
-        describe("/GET /STUDENT",()=>{
+        describe("/GET /teacher",()=>{
             it("it should send back an error without token",(next)=>{
                 chai
                 .request(server)
-                .get("/api/student")
+                .get("/api/teacher")
                 .end((err,res)=>{
                     res.should.have.status(401)
                     next()
@@ -49,39 +49,38 @@ describe("*********USER*********",()=>{
                 })
             })
 
-        it('it should GET all the users', (done) => {
+        it('it should GET all the admin', (done) => {
             chai
               .request(server)
-              .get('/api/student')
+              .get('/api/teacher')
               .set({'Authorization':`Bearer ${token}`})
               .end((err, res) => {
                 res.should.have.status(200)
                 res.body.should.be.an('object')
-
                 done()
               })
           })
 
-          it("it should GET a user based on query",(done)=>{
+          it("it should GET a admin based on query",(done)=>{
               chai
               .request(server)
-              .get("/api/student?role=user&studEmailAddress=abiola@gmail.com")
+              .get(`/api/teacher?role=admin&teacherEmailAddress=${teacherLoginDetails.teacherEmailAddress}`)
               .set({'Authorization':`Bearer ${token}`})
               .end((err, res) => {
                 res.should.have.status(200)
                 res.body.should.be.an('object')
-                createdID.push(res.body.data.students[0]._id)
+                createdID.push(res.body.Teachers[0]._id)
                 done()
           })
 
         })
 
-        describe('/GET /api/student/:id ', () => {
-            it('it should GET a student by given id', done => {
+        describe('/GET /api/teacher/:id ', () => {
+            it('it should GET a teacher by given id', done => {
               const id = createdID.slice(-1).pop()
               chai
                 .request(server)
-                .get(`/api/student/${id}`)
+                .get(`/api/teacher/${id}`)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(200)
@@ -90,11 +89,11 @@ describe("*********USER*********",()=>{
                 })
             })
 
-            it('it should not get any user if a wrong ID is given', done => {
+            it('it should not get any admin if a wrong ID is given', done => {
               const id = createdID.slice(-1).pop()+"1"
               chai
                 .request(server)
-                .get(`/api/student/${id}`)
+                .get(`/api/teacher/${id}`)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(404)
@@ -104,13 +103,13 @@ describe("*********USER*********",()=>{
             })
           })
 
-        describe('/PATCH /api/student/:id ', () => {
-        it('it should UPDATE a user given by the id', done => {
+        describe('/PATCH /api/teacher/:id ', () => {
+        it('it should UPDATE a admin given by the id', done => {
             const id = createdID.slice(-1).pop()
             chai
                 .request(server)
-                .get(`/api/student/${id}`)
-                .send(updateStudentDetail)
+                .get(`/api/teacher/${id}`)
+                .send(updateTeacherDetails)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(200)
@@ -119,12 +118,12 @@ describe("*********USER*********",()=>{
                 })
         })
 
-        it('it should not UPDATE a user given by the id', done => {
+        it('it should not UPDATE a admin given by the id', done => {
             const id = createdID.slice(-1).pop()+"1"
             chai
                 .request(server)
-                .get(`/api/student/${id}`)
-                .send(updateStudentDetail)
+                .get(`/api/teacher/${id}`)
+                .send(updateTeacherDetails)
                 .set({'Authorization':`Bearer ${token}`})
                 .end((error, res) => {
                   res.should.have.status(404)
@@ -134,42 +133,40 @@ describe("*********USER*********",()=>{
         })
     })
 
-    describe("/DELETE /api/student/:id",()=>{
-        const newUser={
-            "studNum":"160403517",
-            "studFname":"Abiola",
-            "studMname":"Johnson",
-            "studLname":"Tomiwa",
-            "studAddressReg":"9 poopola banjoko street Soluyi Gbagada",
-            "studPhone":"080657489887",
-            "studGender":"male",
-            "studAge":21,
-            "studEmailAddress":`${email}`,
-            "YearOfEnrollment":2017,
-            "password":"qaz123pla",
-            "confirmPassword":"qaz123pla",
-            "passwordChangedAt":"2021-06-13"
+    describe("/DELETE /api/teacher/:id",()=>{
+        const newadmin={
+            "teacherFname":`Hameed`,
+            "teacherMname":"Abiodun",
+            "teacherLname":"Lawal",
+            "teacherAddressReg":"9 poopola banjoko street Ikorodu Agric",
+            "teacherPhone":"08032049887",
+            "teacherGender":"male",
+            "teacherAge":21,
+            "teacherEmailAddress":`${email}`,
+            "teacherDuration":2,
+            "password":"Lawizylawino@123",
+            "confirmPassword":"Lawizylawino@123"
         }
-        it("it should DELETE a user given by an id",(done)=>{
+        it("it should DELETE a admin given by an id",(done)=>{
                 chai
                 .request(server)
-                .post("/api/student/signup")
-                .send(newUser)
+                .post("/api/teacher/signup")
+                .send(newadmin)
                 .end((err,res)=>{
                   res.should.have.status(200)
                   res.body.should.include.keys('message')
                   chai
                   .request(server)
-                  .get('/api/student')
+                  .get('/api/teacher')
                   .set({'Authorization':`Bearer ${token}`})
                   .end((err, res) => {
                     res.should.have.status(200)
                     res.body.should.be.an('object')
-                    createdID.push(res.body.data.students.slice(-1)[0]._id)
+                    createdID.push(res.body.Teachers.slice(-1)[0]._id)
                     const id = createdID[createdID.length-1]
                     chai
                     .request(server)
-                    .delete(`/api/student/${id}`)
+                    .delete(`/api/teacher/${id}`)
                     .set('Authorization', `Bearer ${token}`)
                     .end((error, result) => {
                     result.should.have.status(204)
