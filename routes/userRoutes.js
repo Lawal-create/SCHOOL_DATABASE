@@ -10,6 +10,12 @@ route
 .post("/login",authControllers.studentLogin)
 
 route
+.post("/forgotPassword",authControllers.forgotStudentPassword)
+.patch("/resetPassword/:token",authControllers.resetStudentPassword)
+
+
+
+route
 .get("/",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.getAllStudent)
 .get("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.findStudent)
 .patch("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.updateStudent)

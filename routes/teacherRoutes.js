@@ -8,6 +8,11 @@ route
 .post("/signup",authControllers.teacherSignup)
 .post("/login",authControllers.teacherLogin)
 
+
+route
+.post("/forgotPassword",authControllers.forgotTeacherPassword)
+.patch("/resetPassword/:token",authControllers.resetTeacherPassword)
+
 route
 .get("/",authControllers.protectStudent,authControllers.restrictStudentTo('admin') ,teacherController.getAllTeacher)
 
