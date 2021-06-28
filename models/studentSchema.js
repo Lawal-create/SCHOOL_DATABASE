@@ -1,4 +1,5 @@
 const mongoose=require("mongoose")
+const crypto=require("crypto")
 const validator=require("validator")
 const bcrypt=require("bcryptjs")
 const studentSchema=mongoose.Schema({
@@ -87,6 +88,10 @@ const studentSchema=mongoose.Schema({
         select:false 
     },
 
+    passwordResetToken:String,
+    passwordResetExpires:Date,
+
+
     courses:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"course"
@@ -110,8 +115,27 @@ studentSchema.pre("save",async function(next){
     }
 })
 
+studentSchema.pre("save",function(next){
+    if(!this.isModified("password")|| this.isNew){
+        return next()
+    }
+    this.passwordChangedAt=Date.now()-1000
+    next()
+})
+
 studentSchema.methods.correctPassword= async function(candidatePassword,userPassword){
     return await bcrypt.compare(candidatePassword,userPassword)
+}
+
+studentSchema.methods.createPasswordResetToken= function(){
+    const resetToken= crypto.randomBytes(32).toString("hex");
+
+    this.passwordResetToken=crypto.createHash("sha256").update(resetToken).digest('hex')
+    this.passwordResetExpires=Date.now()+10*60*1000
+
+    console.log(`${resetToken},${this.passwordResetToken}`)
+
+    return resetToken
 }
 
 studentSchema.methods.changePasswordAfter=function(JWTTimestamp){

@@ -15,12 +15,24 @@ const resetInfo=(resetURL)=>{
     const text=`Forgot your Password. Please submit a patch request with your new password and password confirm to ${resetURL} .\n If you didn't forget your password, please ignore this email. `
     return text
 }
+
+const successInfo=(statusCode,res)=>{
+    return res.status(statusCode).json({
+        status:"SUCCESS",
+        message:"Your account has been created successfully"
+    })
+}
+
+const sendTokenMessage=(token,statusCode,res)=>{
+    return res.status(statusCode).json({
+        status:"SUCCESS",
+        token	
+    })
+}
+
 exports.studentSignup=catchAsync( async (req,res,next)=>{
         const student= await Student.create(req.body)
-        res.status(200).json({
-            status:"SUCCESS",
-            message:"Your account has been created successfully"
-        })
+        successInfo(200,res)
 })
 
 exports.studentLogin=catchAsync(async(req,res,next)=>{
@@ -37,19 +49,13 @@ exports.studentLogin=catchAsync(async(req,res,next)=>{
     }
     //if everything is fine, send token to client
     const token=tokenGen(student._id)
-    res.status(200).json({
-        status:"SUCCESS",
-        token	
-    })
+    sendTokenMessage(token,200,res)
     
 })
 
 exports.teacherSignup=catchAsync(async(req,res,next)=>{
     const teacher= await Teacher.create(req.body)
-    res.status(200).json({
-        status:"SUCCESS",
-        message:"Your account has been created successfully"
-    })
+    successInfo(200,res)
 })
 
 exports.teacherLogin=catchAsync(async(req,res,next)=>{
@@ -66,10 +72,7 @@ exports.teacherLogin=catchAsync(async(req,res,next)=>{
     }
     //if everything is fine, send token to client
     const token=tokenGen(teacher._id)
-    res.status(200).json({
-        status:"SUCCESS",
-        token	
-    })
+    sendTokenMessage(token,200,res)
     
 })
 
@@ -124,7 +127,6 @@ exports.forgotTeacherPassword=catchAsync(async(req,res,next)=>{
     //Send it to user email
     const resetURL=`${req.protocol}://${req.get("host")}/api/teacher/resetPassword/${resetToken}`
     const value=resetInfo(resetURL)
-    console.log(value)
    
     try{
     await sendEmails({
@@ -164,7 +166,7 @@ exports.forgotStudentPassword=catchAsync(async(req,res,next)=>{
     await sendEmails({
         email:student.studEmailAddress,
         subject:"Your password reset token(valid for 10mins)",
-        text:value
+        value
     })
    
     return res.status(200).json({
@@ -185,8 +187,7 @@ exports.resetTeacherPassword=catchAsync(async(req,res,next)=>{
     //Gets a user based on the token
     const hashedToken=crypto.createHash("sha256").update(req.params.token).digest("hex")
     const teacher=await Teacher.findOne({passwordResetToken:hashedToken, passwordResetExpires:{$gt:Date.now()}})
-    
-    
+
     if(!teacher){
         return next(new AppError("Token has expired or is invalid",400))
     }
@@ -197,19 +198,13 @@ exports.resetTeacherPassword=catchAsync(async(req,res,next)=>{
     teacher.passwordResetToken=undefined
     await teacher.save()
 
-
     const token=tokenGen(teacher._id)
-    return res.status(200).json({
-        status:"Success",
-        token
-    })
+    sendTokenMessage(token,200,res)
 })
 
 exports.resetStudentPassword=catchAsync(async(req,res,next)=>{
-    //Gets a user based on the token
     const hashedToken=crypto.createHash("sha256").update(req.params.token).digest("hex")
     const student=await Student.findOne({passwordResetToken:hashedToken, passwordResetExpires:{$gt:Date.now()}})
-    
     
     if(!student){
         return next(new AppError("Token has expired or is invalid",400))
@@ -220,13 +215,22 @@ exports.resetStudentPassword=catchAsync(async(req,res,next)=>{
     student.passwordResetExpires=undefined
     student.passwordResetToken=undefined
     await student.save()
-
-
     const token=tokenGen(student._id)
-    res.status(200).json({
-        status:"Success",
-        token
-    })
+    sendTokenMessage(token,200,res)
     next()
+})
+
+exports.updateTeacherPassword=catchAsync(async(req,res,next)=>{
+    const teacher= await Teacher.findById(req.params.id).select("+password")
+
+    if(!(await teacher.correctPassword(req.body.currentPassword,teacher.password))){
+        return next(new AppError("Please input a new password and confirm password",401))
+    }
+
+    teacher.password=req.body.password
+    teacher.confirmPassword=req.body.confirmPassword
+    await teacher.save()
+    const token=tokenGen(teacher._id)
+    sendTokenMessage(token,200,res)
 })
 
