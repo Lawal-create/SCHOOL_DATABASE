@@ -23,11 +23,22 @@ const successInfo=(statusCode,res)=>{
     })
 }
 
-const sendTokenMessage=(token,statusCode,res)=>{
+const sendTokenMessage=(user,statusCode,res)=>{
+    const token=tokenGen(user._id)
     return res.status(statusCode).json({
         status:"SUCCESS",
         token	
     })
+}
+
+const filterObj=(obj,...allowed)=>{
+    newObj={}
+    Object.keys(obj).forEach(el=>{
+        if(allowed.includes(el)){
+            newObj[el]=obj[el]
+        }
+    })
+    return newObj
 }
 
 exports.studentSignup=catchAsync( async (req,res,next)=>{
@@ -48,8 +59,7 @@ exports.studentLogin=catchAsync(async(req,res,next)=>{
         return next(new AppError("Incorrect password"))
     }
     //if everything is fine, send token to client
-    const token=tokenGen(student._id)
-    sendTokenMessage(token,200,res)
+    sendTokenMessage(student,200,res)
     
 })
 
@@ -71,8 +81,7 @@ exports.teacherLogin=catchAsync(async(req,res,next)=>{
         return next(new AppError("Incorrect password"))
     }
     //if everything is fine, send token to client
-    const token=tokenGen(teacher._id)
-    sendTokenMessage(token,200,res)
+    sendTokenMessage(teacher,200,res)
     
 })
 
@@ -104,6 +113,34 @@ exports.protectStudent=catchAsync(async(req,res,next)=>{
     next()
 })
 
+exports.protectUser=catchAsync(async(req,res,next)=>{
+    //Getting token and checking if it is there
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token=req.headers.authorization.split(" ")[1]
+    }
+
+    if(!token){
+        return next(new AppError("No token found",401))
+    }
+    //verification of Token
+    const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET)
+
+    //Checking if the user still exists
+    const currentStudent=await Student.findById(decoded.id)
+    if (!currentStudent){
+        return next(new AppError("Please check if you have permission to perform this action otherwise the user belonging to this token no longer exists",401||403))
+    }
+
+    //Checking if the user changed password after the token was used
+    if(currentStudent.changePasswordAfter(decoded.iat)){
+        return next(new AppError("Teacher recently changed his password, Please log in again",401))
+    }
+
+    req.student=currentStudent
+    next()
+})
+
 exports.restrictStudentTo=(...roles)=>{
     return (req, res, next)=>{
         if(!roles.includes(req.teacher.role)){
@@ -111,7 +148,14 @@ exports.restrictStudentTo=(...roles)=>{
         }
         next()
     }
-
+}
+exports.restrictUserTo=(...roles)=>{
+    return (req, res, next)=>{
+        if(!roles.includes(req.student.role)){
+            return next(new AppError("You do not have permission to perform this action",403))
+        }
+        next()
+    }
 }
 
 exports.forgotTeacherPassword=catchAsync(async(req,res,next)=>{
@@ -198,8 +242,7 @@ exports.resetTeacherPassword=catchAsync(async(req,res,next)=>{
     teacher.passwordResetToken=undefined
     await teacher.save()
 
-    const token=tokenGen(teacher._id)
-    sendTokenMessage(token,200,res)
+    sendTokenMessage(teacher,200,res)
 })
 
 exports.resetStudentPassword=catchAsync(async(req,res,next)=>{
@@ -215,13 +258,12 @@ exports.resetStudentPassword=catchAsync(async(req,res,next)=>{
     student.passwordResetExpires=undefined
     student.passwordResetToken=undefined
     await student.save()
-    const token=tokenGen(student._id)
-    sendTokenMessage(token,200,res)
+    sendTokenMessage(student,200,res)
     next()
 })
 
 exports.updateTeacherPassword=catchAsync(async(req,res,next)=>{
-    const teacher= await Teacher.findById(req.params.id).select("+password")
+    const teacher= await Teacher.findById(req.teacher.id).select("+password")
 
     if(!(await teacher.correctPassword(req.body.currentPassword,teacher.password))){
         return next(new AppError("Please input a new password and confirm password",401))
@@ -230,7 +272,36 @@ exports.updateTeacherPassword=catchAsync(async(req,res,next)=>{
     teacher.password=req.body.password
     teacher.confirmPassword=req.body.confirmPassword
     await teacher.save()
-    const token=tokenGen(teacher._id)
-    sendTokenMessage(token,200,res)
+    sendTokenMessage(teacher,200,res)
+})
+
+exports.updateStudentPassword=catchAsync(async(req,res,next)=>{
+    const student= await Student.findById(req.student.id).select("+password")
+
+    if(!(await student.correctPassword(req.body.currentPassword,student.password))){
+        return next(new AppError("Please input a new password and confirm password",401))
+    }
+
+    student.password=req.body.password
+    student.confirmPassword=req.body.confirmPassword
+    await student.save()
+    sendTokenMessage(student,200,res)
+})
+
+exports.updateUser=catchAsync(async(req,res,next)=>{
+    if(req.body.password||req.body.confirmPassword){
+        return next(new AppError("You cannot change your password. Please use updatePassword",404))
+    }
+    const filteredBody=filterObj(req.body,"studEmailAddress","studAddressReg","studPhone")
+    const updateStudent=await Student.findByIdAndUpdate(req.student.id,filteredBody,{
+        new:true,
+        runValidators:true
+    })
+
+    return res.status(200).json({
+        status:"SUCCESS",
+        student:updateStudent
+        
+    })
 })
 

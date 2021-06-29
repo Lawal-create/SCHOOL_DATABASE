@@ -105,7 +105,7 @@ teacherSchema.pre("save",function(next){
     if(!this.isModified("password")|| this.isNew){
         return next()
     }
-    this.passwordChangedAt=Date.now()-1000
+    this.passwordChangedAt = Date.now()
     next()
 })
 
@@ -118,7 +118,7 @@ teacherSchema.methods.correctPassword= async function(
 
 teacherSchema.methods.changePasswordAfter=function(JWTTimestamp){
     if(this.passwordChangedAt){
-        const changesTimestamp=parseInt(this.passwordChangedAt.getTime()/1000,10)
+        const changesTimestamp=parseInt(this.passwordChangedAt.getTime/1000,10)
         return JWTTimestamp<changesTimestamp
     }
     return false

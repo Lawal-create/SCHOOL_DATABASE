@@ -140,7 +140,7 @@ studentSchema.methods.createPasswordResetToken= function(){
 
 studentSchema.methods.changePasswordAfter=function(JWTTimestamp){
     if(this.passwordChangedAt){
-        const changesTimestamp=parseInt(this.passwordChangedAt.getTime()/1000,10)
+        const changesTimestamp=parseInt(this.passwordChangedAt.getTime/1000,10)
         return JWTTimestamp<changesTimestamp
     }
     return false

@@ -14,6 +14,20 @@ route
 .patch("/resetPassword/:token",authControllers.resetStudentPassword)
 
 route
+.patch(
+    "/updatePassword",
+    authControllers.protectUser,
+    authControllers.restrictUserTo('user'),
+    authControllers.updateStudentPassword)
+
+route
+.patch(
+    "/updateStudent",
+    authControllers.protectUser,
+    authControllers.restrictUserTo('user'),
+    authControllers.updateUser)
+
+route
 .get("/",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.getAllStudent)
 .get("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.findStudent)
 .patch("/:id",authControllers.protectStudent,authControllers.restrictStudentTo("admin"),userControllers.updateStudent)

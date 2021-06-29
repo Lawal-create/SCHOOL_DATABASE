@@ -5,16 +5,38 @@ const authControllers=require("../controllers/authController")
 const teacherController=require("../controllers/teacherController")
 
 route
-.post("/signup",authControllers.teacherSignup)
-.post("/login",authControllers.teacherLogin)
+.post(
+    "/signup",
+    authControllers.teacherSignup)
+.post(
+    "/login",
+    authControllers.teacherLogin)
 
 
 route
-.post("/forgotPassword",authControllers.forgotTeacherPassword)
-.patch("/resetPassword/:token",authControllers.resetTeacherPassword)
+.post(
+    "/forgotPassword",
+    authControllers.forgotTeacherPassword)
+
+.patch(
+    "/resetPassword/:token",
+    authControllers.resetTeacherPassword)
 
 route
-.get("/",authControllers.protectStudent,authControllers.restrictStudentTo('admin') ,teacherController.getAllTeacher)
+.patch(
+    "/updatePassword",
+    authControllers.protectStudent,
+    authControllers.restrictStudentTo('admin'),
+    authControllers.updateTeacherPassword)
+
+// route
+// .patch("/updateAdmin",authControllers.protectStudent,authControllers.restrictStudentTo('admin'),authControllers.updateAdmin)
+route
+.get(
+    "/",
+    authControllers.protectStudent,
+    authControllers.restrictStudentTo('admin'),
+    teacherController.getAllTeacher)
 
 route
 .get("/:id",authControllers.protectStudent,authControllers.restrictStudentTo('admin') ,teacherController.findTeacher)
