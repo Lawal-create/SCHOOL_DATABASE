@@ -40,5 +40,13 @@ app.listen(PORT,()=>{
     console.log(`Server is running at port ${PORT}`)
 })
 
+process.on("unhandleRejection",err=>{
+    console.log(err.name, err.message)
+    console.log("UNHANDLER REJECTION!. SHUTTING DOWN")
+    app.close(()=>{
+        process.exit(1)
+    })
+})
+
 module.exports=app
 

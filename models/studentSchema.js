@@ -2,6 +2,7 @@ const mongoose=require("mongoose")
 const crypto=require("crypto")
 const validator=require("validator")
 const bcrypt=require("bcryptjs")
+
 const studentSchema=mongoose.Schema({
 
     studNum:{
