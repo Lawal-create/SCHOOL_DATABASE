@@ -11,7 +11,7 @@ pipeline {
         stage('Deploy') {
             steps {
 
-                bat 'nodemon index.js'
+                bat 'node index.js'
             }
         }
     }
