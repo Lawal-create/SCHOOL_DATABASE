@@ -11,7 +11,7 @@ pipeline {
         stage('Deploy') {
             steps {
 
-                bat 'node index.js'
+                sh 'node .jenkins\workspace\SCHOOL_DATABASE\index.js'
             }
         }
     }
